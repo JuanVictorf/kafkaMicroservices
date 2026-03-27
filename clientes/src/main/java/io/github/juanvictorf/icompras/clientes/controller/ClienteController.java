@@ -1,7 +1,7 @@
-package io.github.juanvictorf.icompras.produtos.controller;
+package io.github.juanvictorf.icompras.clientes.controller;
 
-import io.github.juanvictorf.icompras.produtos.model.Produto;
-import io.github.juanvictorf.icompras.produtos.service.ProdutoService;
+import io.github.juanvictorf.icompras.clientes.model.Cliente;
+import io.github.juanvictorf.icompras.clientes.service.ClienteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,22 +12,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("produtos")
 @RequiredArgsConstructor
-public class ProdutoController {
+@RequestMapping("clientes")
+public class ClienteController {
 
-    private final ProdutoService service;;
+    private final ClienteService service;
 
     @PostMapping
-    public ResponseEntity<Produto> salvar(@RequestBody Produto produto) {
-        service.salvar(produto);
-        return ResponseEntity.ok(produto);
+    public ResponseEntity<Cliente> salvar(@RequestBody Cliente cliente) {
+        service.salvar(cliente);
+        return ResponseEntity.ok(cliente);
     }
 
     @GetMapping("{codigo}")
-    public ResponseEntity<Produto> obterDados(@PathVariable("codigo") Long codigo) {
+    public ResponseEntity<Cliente> obterDados(@PathVariable Long codigo) {
         return service.obterPorCodigo(codigo)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
 }
