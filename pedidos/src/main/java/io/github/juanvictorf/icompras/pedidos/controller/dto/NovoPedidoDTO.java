@@ -6,6 +6,5 @@ public record NovoPedidoDTO(
         Long codigoCliente,
         DadosPagamentoDTO dadosPagamento,
         List<ItemPedidoDTO> itens
-
 ) {
 }
