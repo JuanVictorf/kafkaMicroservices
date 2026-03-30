@@ -1,4 +1,4 @@
-package io.github.juanvictorf.icompras.pedidos.cliente;
+package io.github.juanvictorf.icompras.pedidos.client;
 
 import io.github.juanvictorf.icompras.pedidos.model.Pedido;
 import lombok.extern.slf4j.Slf4j;
