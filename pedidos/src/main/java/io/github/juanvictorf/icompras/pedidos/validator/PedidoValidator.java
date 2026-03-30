@@ -1,12 +1,17 @@
 package io.github.juanvictorf.icompras.pedidos.validator;
 
+import io.github.juanvictorf.icompras.pedidos.client.ProdutosClient;
 import io.github.juanvictorf.icompras.pedidos.model.Pedido;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class PedidoValidator {
 
-    public void validar(Pedido pedido) {
+    private final ProdutosClient produtosClient;
 
+    public void validar(Pedido pedido) {
     }
 }
