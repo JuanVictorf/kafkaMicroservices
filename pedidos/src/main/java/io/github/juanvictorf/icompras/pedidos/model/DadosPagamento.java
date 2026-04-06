@@ -1,6 +1,6 @@
 package io.github.juanvictorf.icompras.pedidos.model;
 
-import io.github.juanvictorf.icompras.pedidos.enums.TipoPagamento;
+import io.github.juanvictorf.icompras.pedidos.model.enums.TipoPagamento;
 import lombok.Data;
 
 @Data

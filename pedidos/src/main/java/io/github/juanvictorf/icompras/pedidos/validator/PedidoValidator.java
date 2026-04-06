@@ -7,6 +7,7 @@ import io.github.juanvictorf.icompras.pedidos.client.representation.ClienteRepre
 import io.github.juanvictorf.icompras.pedidos.client.representation.ProdutoRepresentation;
 import io.github.juanvictorf.icompras.pedidos.model.ItemPedido;
 import io.github.juanvictorf.icompras.pedidos.model.Pedido;
+import io.github.juanvictorf.icompras.pedidos.model.exception.ValidationException;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -26,13 +27,14 @@ public class PedidoValidator {
         pedido.getItens().forEach(this::validarItem);
     }
 
-    private void validarCliente(Long codigo){
+    private void validarCliente(Long codigoCliente){
         try{
-            var response = clientsClient.obterDados(codigo);
+            var response = clientsClient.obterDados(codigoCliente);
             ClienteRepresentation cliente = response.getBody();
             log.info("Cliente de código {} encontrado: {} ", cliente.codigo(), cliente.nome());
         } catch (FeignException.NotFound e){
-            log.error("Cliente não encontrado");
+            var message = String.format("Cliente de código %d não encontrado.", codigoCliente);
+            throw new ValidationException("codigoCliente", message);
         }
 
     }
@@ -43,7 +45,8 @@ public class PedidoValidator {
             ProdutoRepresentation produto = response.getBody();
             log.info("Produto de código {} encontrado: {}", produto.codigo(), produto.nome());
         } catch (FeignException.NotFound e) {
-            log.error("Produto não encontrado");
+            var message = String.format("Produto de código %d não encontrado.", item.getCodigoProduto());
+            throw new ValidationException("codigoProduto", message);
         }
     }
 }

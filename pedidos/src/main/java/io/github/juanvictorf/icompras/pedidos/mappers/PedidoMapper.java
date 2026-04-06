@@ -2,7 +2,7 @@ package io.github.juanvictorf.icompras.pedidos.mappers;
 
 import io.github.juanvictorf.icompras.pedidos.controller.dto.ItemPedidoDTO;
 import io.github.juanvictorf.icompras.pedidos.controller.dto.NovoPedidoDTO;
-import io.github.juanvictorf.icompras.pedidos.enums.StatusPedido;
+import io.github.juanvictorf.icompras.pedidos.model.enums.StatusPedido;
 import io.github.juanvictorf.icompras.pedidos.model.ItemPedido;
 import io.github.juanvictorf.icompras.pedidos.model.Pedido;
 import org.mapstruct.AfterMapping;
