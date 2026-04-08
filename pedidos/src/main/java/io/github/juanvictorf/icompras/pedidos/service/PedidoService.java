@@ -5,6 +5,7 @@ import io.github.juanvictorf.icompras.pedidos.model.DadosPagamento;
 import io.github.juanvictorf.icompras.pedidos.model.Pedido;
 import io.github.juanvictorf.icompras.pedidos.model.enums.StatusPedido;
 import io.github.juanvictorf.icompras.pedidos.model.enums.TipoPagamento;
+import io.github.juanvictorf.icompras.pedidos.model.exception.ItemNaoEncontradoException;
 import io.github.juanvictorf.icompras.pedidos.repository.ItemPedidoRepository;
 import io.github.juanvictorf.icompras.pedidos.repository.PedidoRepository;
 import io.github.juanvictorf.icompras.pedidos.validator.PedidoValidator;
@@ -67,7 +68,7 @@ public class PedidoService {
         var pedidoEncontrado = repository.findById(codigoPedido);
 
         if(pedidoEncontrado.isEmpty()){
-            return;
+            throw new ItemNaoEncontradoException("Pedido não encontrado para o código informado");
         }
 
         var pedido = pedidoEncontrado.get();

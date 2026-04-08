@@ -4,6 +4,7 @@ import io.github.juanvictorf.icompras.pedidos.controller.dto.AdicionaNovoPagamen
 import io.github.juanvictorf.icompras.pedidos.controller.dto.NovoPedidoDTO;
 import io.github.juanvictorf.icompras.pedidos.mappers.PedidoMapper;
 import io.github.juanvictorf.icompras.pedidos.model.ErroResposta;
+import io.github.juanvictorf.icompras.pedidos.model.exception.ItemNaoEncontradoException;
 import io.github.juanvictorf.icompras.pedidos.model.exception.ValidationException;
 import io.github.juanvictorf.icompras.pedidos.service.PedidoService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class PedidoController {
     private final PedidoMapper mapper;
 
     @PostMapping
-    public ResponseEntity<Object> criar(@RequestBody NovoPedidoDTO dto){
+    public ResponseEntity<Object> criar(@RequestBody NovoPedidoDTO dto) {
         try {
             var pedido = mapper.map(dto);
             var novoPedido = service.criarPedido(pedido);
@@ -36,14 +37,18 @@ public class PedidoController {
     }
 
     @PostMapping("pagamentos")
-    public ResponseEntity<Optional> adicionarNovoPagamento(@RequestBody AdicionaNovoPagamentoDTO dto){
-        service.adicionarNovoPagamento(
-                dto.codigoPedido(),
-                dto.dados(),
-                dto.tipoPagamento()
-        );
-
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Object> adicionarNovoPagamento(@RequestBody AdicionaNovoPagamentoDTO dto) {
+        try {
+            service.adicionarNovoPagamento(
+                    dto.codigoPedido(),
+                    dto.dados(),
+                    dto.tipoPagamento()
+            );
+            return ResponseEntity.noContent().build();
+        } catch (ItemNaoEncontradoException e) {
+            var erro = new ErroResposta("Item não encontrado","codigoPedido", e.getMessage());
+            return ResponseEntity.badRequest().body(erro);
+        }
     }
 }
 
