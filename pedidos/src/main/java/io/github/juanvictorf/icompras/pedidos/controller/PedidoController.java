@@ -1,5 +1,6 @@
 package io.github.juanvictorf.icompras.pedidos.controller;
 
+import io.github.juanvictorf.icompras.pedidos.controller.dto.AdicionaNovoPagamentoDTO;
 import io.github.juanvictorf.icompras.pedidos.controller.dto.NovoPedidoDTO;
 import io.github.juanvictorf.icompras.pedidos.mappers.PedidoMapper;
 import io.github.juanvictorf.icompras.pedidos.model.ErroResposta;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("pedidos")
@@ -30,6 +33,17 @@ public class PedidoController {
             var erro = new ErroResposta("Erro validação", e.getField(), e.getMessage());
             return ResponseEntity.badRequest().body(erro);
         }
+    }
+
+    @PostMapping("pagamentos")
+    public ResponseEntity<Optional> adicionarNovoPagamento(@RequestBody AdicionaNovoPagamentoDTO dto){
+        service.adicionarNovoPagamento(
+                dto.codigoPedido(),
+                dto.dados(),
+                dto.tipoPagamento()
+        );
+
+        return ResponseEntity.noContent().build();
     }
 }
 
