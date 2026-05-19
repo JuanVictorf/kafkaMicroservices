@@ -1,7 +1,10 @@
 package io.github.juanvictorf.icompras.pedidos.client.representation;
 
+import java.math.BigDecimal;
+
 public record ProdutoRepresentation(
         Long codigo,
-        String nome
+        String nome,
+        BigDecimal valorUnitario
 ) {
 }

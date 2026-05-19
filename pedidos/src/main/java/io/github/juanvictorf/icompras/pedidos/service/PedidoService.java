@@ -3,13 +3,13 @@ package io.github.juanvictorf.icompras.pedidos.service;
 import io.github.juanvictorf.icompras.pedidos.client.ClientsClient;
 import io.github.juanvictorf.icompras.pedidos.client.ProdutosClient;
 import io.github.juanvictorf.icompras.pedidos.client.ServicoBancarioClient;
-import io.github.juanvictorf.icompras.pedidos.client.representation.ClienteRepresentation;
 import io.github.juanvictorf.icompras.pedidos.model.DadosPagamento;
 import io.github.juanvictorf.icompras.pedidos.model.ItemPedido;
 import io.github.juanvictorf.icompras.pedidos.model.Pedido;
 import io.github.juanvictorf.icompras.pedidos.model.enums.StatusPedido;
 import io.github.juanvictorf.icompras.pedidos.model.enums.TipoPagamento;
 import io.github.juanvictorf.icompras.pedidos.model.exception.ItemNaoEncontradoException;
+import io.github.juanvictorf.icompras.pedidos.publisher.PagamentoPublisher;
 import io.github.juanvictorf.icompras.pedidos.repository.ItemPedidoRepository;
 import io.github.juanvictorf.icompras.pedidos.repository.PedidoRepository;
 import io.github.juanvictorf.icompras.pedidos.validator.PedidoValidator;
@@ -32,6 +32,7 @@ public class PedidoService {
     private final ServicoBancarioClient servicoBancarioClient;
     private final ClientsClient apiClientes;
     private final ProdutosClient apiProdutos;
+    private final PagamentoPublisher pagamentoPublisher;
 
     @Transactional
     public Pedido criarPedido(Pedido pedido) {
@@ -63,13 +64,20 @@ public class PedidoService {
         Pedido pedido = pedidoEncontrado.get();
 
         if(sucesso){
-            pedido.setStatus(StatusPedido.PAGO);
+            prepararEPublicarPedidoPago(pedido);
         } else{
             pedido.setStatus(StatusPedido.ERRO_PAGAMENTO);
             pedido.setObservacoes(observacoes);
         }
 
         repository.save(pedido);
+    }
+
+    private void prepararEPublicarPedidoPago(Pedido pedido) {
+        pedido.setStatus(StatusPedido.PAGO);
+        carregarDadosCliente(pedido);
+        carregarItensPedido(pedido);
+        pagamentoPublisher.publicar(pedido);
     }
 
     @Transactional
